@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ABM\Http\Controllers;
+namespace Asivas\ABM\Http\Controllers;
 
 use ABM\Exceptions\FormFieldValidationException;
 use ABM\Form\FormField;

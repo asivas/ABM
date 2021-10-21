@@ -1,6 +1,6 @@
 <?php
 
-namespace ABM\Http;
+namespace Asivas\ABM\Http;
 
 use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;

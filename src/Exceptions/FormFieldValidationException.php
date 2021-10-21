@@ -1,6 +1,6 @@
 <?php
 
-namespace ABM\Exceptions;
+namespace Asivas\ABM\Exceptions;
 
 class FormFieldValidationException extends \Exception
 {

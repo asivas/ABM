@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ABM\Http;
+namespace Asivas\ABM\Http;
 
 
 class NavItem implements

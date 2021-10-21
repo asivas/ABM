@@ -1,6 +1,6 @@
 <?php
 
-namespace ABM\Form;
+namespace Asivas\ABM\Form;
 
  abstract class Rule
 {
