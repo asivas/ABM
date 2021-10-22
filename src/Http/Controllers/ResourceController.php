@@ -1,24 +1,20 @@
 <?php
-
-
 namespace Asivas\ABM\Http\Controllers;
 
-use ABM\Exceptions\FormFieldValidationException;
-use ABM\Form\FormField;
-use ABM\Http\ColumnField;
-use ABM\Http\ColumnFieldType;
-use ABM\Http\Controllers\Controller as BaseController;
-use App\Models\Model;
-use App\Models\User;
+use Asivas\ABM\Exceptions\FormFieldValidationException;
+use Asivas\ABM\Form\FormField;
+use Asivas\ABM\Http\ColumnField;
+use Asivas\ABM\Http\ColumnFieldType;
+use Asivas\ABM\Http\Controllers\Controller as BaseController;
+
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
-use function PHPUnit\Framework\isNull;
 
 class ResourceController extends BaseController
 {
@@ -483,7 +479,7 @@ class ResourceController extends BaseController
      * @param User $user
      * @return array
      */
-    protected function getUserActions($resource, User $user)
+    protected function getUserActions($resource, $user)
     {
         $allowedActions = [];
         foreach ($this->actions as $action) {
@@ -494,12 +490,12 @@ class ResourceController extends BaseController
     }
 
     /**
-     * @param \App\Models\User $user
+     * @param User $user
      * @param string $action
      * @param \App\Models\Model $resource
      * @return array
      */
-    protected function getPermissionForAction(User $user, string $action, $resource)
+    protected function getPermissionForAction($user, string $action, $resource)
     {
         $userActionPermission['any'] = ResourceController::actionDenied;
 
