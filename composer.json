@@ -1,0 +1,30 @@
+{
+    "name": "asivas/abm",
+    "description": "The CRUD-Resouce controller implementation make simple base of an app based on resources, with NavItems and FormFields backend representation",
+    "type": "library",
+    "require": {
+        "illuminate/support": "^8.66",
+        "illuminate/contracts": "^8.66",
+        "illuminate/console": "^8.66"
+    },
+    "require-dev": {
+        "laravel/framework": "^8.66"
+    },
+    "autoload": {
+        "psr-4": {
+            "Asivas\\ABM": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Asivas\\ABM\\Test\\": "tests/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucas Vidaguren",
+            "email": "lucas.vidaguren@asivas.com.ar"
+        }
+    ]
+}
