@@ -1,6 +1,7 @@
 <?php
 namespace Asivas\ABM\Http\Controllers;
 
+use Asivas\ABM\Exceptions\ABMException;
 use Asivas\ABM\Exceptions\FormFieldValidationException;
 use Asivas\ABM\Form\FormField;
 use Asivas\ABM\Http\ColumnField;
@@ -172,7 +173,6 @@ class ResourceController extends BaseController
     public function store(Request $request)
     {
         try {
-
             $this->validateFormFields($request);
 
             $this->authorize('create', $this->model);
@@ -184,11 +184,15 @@ class ResourceController extends BaseController
             return response($e->errorInfo, 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
-        } catch (FormFieldValidationException $e) {
-            return response($e->getMessage(), $e->getCode());
+        } catch (ABMException $e) {
+            return $this->resolveException($e);
         }
     }
 
+    public function resolveException(ABMException $e)
+    {
+        return response($e->getMessage(), $e->getCode());
+    }
     /**
      * Display the specified resource.
      *
