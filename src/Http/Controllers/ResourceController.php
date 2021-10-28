@@ -191,7 +191,7 @@ class ResourceController extends BaseController
 
     public function resolveException(ABMException $e)
     {
-        return response($e->getMessage(), $e->getCode());
+        return response($e->getMessage(), $e->getStatusCode());
     }
     /**
      * Display the specified resource.
