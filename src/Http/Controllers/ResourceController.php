@@ -193,6 +193,11 @@ class ResourceController extends BaseController
     {
         return response($e->getMessage(), $e->getStatusCode());
     }
+
+    protected function fetchResourceForShow($id) {
+        return $this->model::with($this->getRelations())->findOrFail($id);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -201,8 +206,8 @@ class ResourceController extends BaseController
      */
     public function show(Request $request, $id)
     {
-        $item = $this->model::with($this->getRelations())->findOrFail($id);
         try {
+            $item = $this->fetchResourceForShow($id);
             $this->authorize('view', $item);
             $item->actions = $this->getUserActions($item, $request->user());
             return $item;
