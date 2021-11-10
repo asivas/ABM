@@ -278,7 +278,7 @@ class ResourceController extends BaseController
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(int $id)
+    public function destroy($id)
     {
         $c = $this->model::find($id);
         try {
