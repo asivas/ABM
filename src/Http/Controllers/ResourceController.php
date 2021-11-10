@@ -540,7 +540,14 @@ class ResourceController extends BaseController
      */
     protected function getFieldListForFilter($modelFields): array
     {
-        return !empty($modelFields) ? $modelFields : ['*'];
+        if(empty($modelFields))
+            $modelFields =  ['*'];
+        else
+        {
+            $modelFields[]='id';
+        }
+
+        return  $modelFields;
     }
 
 
