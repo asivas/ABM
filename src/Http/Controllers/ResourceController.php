@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -98,6 +99,29 @@ class ResourceController extends BaseController
     }
 
     /**
+     * @param array $filterProperties
+     * @param $user
+     * @return mixed
+     */
+    protected function getPaginatedFilteredList(array $filterProperties, $user =null, $injectUserActions=true)
+    {
+        if(!isset($user))
+            $user = auth()->user();
+        $with = $this->getRelationsFromRelatedFields();
+        $list = $this->model::with($with)
+            ->filter($filterProperties)
+            ->PaginateFilter(null, $this->getFieldListForFilter($this->modelFields()));
+
+        if($injectUserActions) {
+            $items = $list->items();
+            foreach ($items as $res) {
+                $res->actions = $this->getUserActions($res, $user);
+            }
+        }
+        return $list;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -108,17 +132,10 @@ class ResourceController extends BaseController
             $this->authorize('viewAny', $this->model);
             $user = $request->user();
 
-            $with = $this->getRelationsFromRelatedFields();
-            $list = $this->model::with($with)
-                ->filter($request->all())
-                ->PaginateFilter(null, $this->getFieldListForFilter($this->modelFields()));
-
-            $items = $list->items();
-            foreach ($items as $res) {
-                $res->actions = $this->getUserActions($res, $user);
-            }
-
             Log::debug('Visited', $this->getLogContext());
+            $filterProperties = $request->all();
+            $list = $this->getPaginatedFilteredList($filterProperties, $user);
+
             return $list;
         } catch (QueryException $e) {
             return response($e->errorInfo, 409);
@@ -574,5 +591,7 @@ class ResourceController extends BaseController
             throw new FormFieldValidationException(json_encode($errorMsg),422);
         }
     }
+
+
 
 }
