@@ -10,8 +10,13 @@ use JsonSerializable;
 
 class FieldGroup implements \ArrayAccess, \JsonSerializable, \Illuminate\Contracts\Support\Jsonable, \Illuminate\Contracts\Support\Arrayable
 {
-    protected $fields;
+    protected $fields = [];
     protected $name;
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
     /**
      * @inheritDoc

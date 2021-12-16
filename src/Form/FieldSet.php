@@ -5,7 +5,7 @@ namespace Asivas\ABM\Form;
 class FieldSet  extends FieldGroup
 {
 
-    protected $fieldGroups;
+    protected $fieldGroups = [];
 
     /**
      * @return mixed
@@ -37,12 +37,12 @@ class FieldSet  extends FieldGroup
         return $array;
     }
 
-    public function addFieldGroup(FieldGroup $field) {
-        $this->fields[] = $field;
+    public function addFieldGroup(FieldGroup $fieldGroup) {
+        $this->fieldGroups[] = $fieldGroup;
     }
 
-    public function insertFieldGroup(FieldGroup $field, $position) {
-        $this->fields[$position] = $field;
+    public function insertFieldGroup(FieldGroup $group, $position) {
+        $this->fieldGroups[$position] = $group;
     }
 
     /**

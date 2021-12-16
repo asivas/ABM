@@ -41,7 +41,6 @@ class ResourceController extends BaseController
     public function __construct()
     {
         $this->initFormFields();
-        $this->initFullFormFields();
         $this->initActions();
         $this->initListColumns();
     }
@@ -66,6 +65,17 @@ class ResourceController extends BaseController
     protected function initFormFields()
     {
         $this->formFieldSets = [];
+    }
+
+    /**
+     * Gets (creates if doesn't exists) the fieldSet with the given name
+     * @param string $fieldSetName
+     * @return FieldSet
+     */
+    protected function getFormFieldSet($fieldSetName) {
+        if(!isset($this->formFieldSets[$fieldSetName]))
+            $this->addFieldSet($fieldSetName);
+        return $this->formFieldSets[$fieldSetName];
     }
 
     /**
@@ -425,7 +435,7 @@ class ResourceController extends BaseController
 
     public function formFields()
     {
-        return $this->getFormFieldSets();
+        return $this->getFormFields();
     }
 
     public function fullFormFields()
