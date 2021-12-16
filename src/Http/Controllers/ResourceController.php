@@ -74,7 +74,7 @@ class ResourceController extends BaseController
      */
     protected function getFormFieldSet($fieldSetName) {
         if(!isset($this->formFieldSets[$fieldSetName]))
-            $this->addFieldSet($fieldSetName);
+            $this->addFieldSet(new FieldSet($fieldSetName));
         return $this->formFieldSets[$fieldSetName];
     }
 

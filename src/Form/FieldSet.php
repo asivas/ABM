@@ -39,10 +39,12 @@ class FieldSet  extends FieldGroup
 
     public function addFieldGroup(FieldGroup $fieldGroup) {
         $this->fieldGroups[] = $fieldGroup;
+        return $this;
     }
 
     public function insertFieldGroup(FieldGroup $group, $position) {
         $this->fieldGroups[$position] = $group;
+        return $this;
     }
 
     /**
@@ -62,6 +64,12 @@ class FieldSet  extends FieldGroup
             }
         }
         return false;
+    }
+
+    public function getFieldGroup($name) {
+        if(!isset($this->fieldGroups[$name]))
+            $this->fieldGroups[$name] = new FieldGroup($name);
+        return $this->fieldGroups[$name];
     }
 
 }
