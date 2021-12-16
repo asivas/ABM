@@ -3,6 +3,7 @@ namespace Asivas\ABM\Http\Controllers;
 
 use Asivas\ABM\Exceptions\ABMException;
 use Asivas\ABM\Exceptions\FormFieldValidationException;
+use Asivas\ABM\Form\FieldSet;
 use Asivas\ABM\Form\FormField;
 use Asivas\ABM\Http\ColumnField;
 use Asivas\ABM\Http\ColumnFieldType;
@@ -20,8 +21,7 @@ use Illuminate\Support\Str;
 
 class ResourceController extends BaseController
 {
-    protected $formFields;
-    protected $fullFormFields;
+    protected $formFieldSets;
     protected $listColumnFields;
 
     /**
@@ -64,24 +64,16 @@ class ResourceController extends BaseController
 
     protected function initFormFields()
     {
-        $this->formFields = [];
+        $this->formFieldSets = [];
     }
 
-    protected function initFullFormFields()
+    /**
+     * @param FieldSet $fieldSet
+     * @return void
+     */
+    protected function addFieldSet($fieldSet)
     {
-        $this->fullFormFields = [];
-    }
-
-    protected function getFullFormFields()
-    {
-        /* $plainFullFieldsArray = [];
-         foreach ($this->fullFormFields as $key => $value){
-             foreach ($value as $field){
-                 $plainFullFieldsArray[$key][] = $field->toArray();
-             }
-         }
-         return $plainFullFieldsArray;*/
-        return $this->fullFormFields;
+        $this->formFieldSets[$fieldSet->getName()] = $fieldSet;
     }
 
     protected function getRelations()
@@ -92,8 +84,9 @@ class ResourceController extends BaseController
     public function getFormFields()
     {
         $plainFiledsArray = [];
-        foreach ($this->formFields as $field) {
-            $plainFiledsArray[] = $field->toArray();
+        /** @var FieldSet $fieldset  */
+        foreach ($this->formFieldSets as $fieldset) {
+            $plainFiledsArray[$fieldset->getName()] = $fieldset->toArray();
         }
         return $plainFiledsArray;
     }
@@ -431,7 +424,7 @@ class ResourceController extends BaseController
 
     public function formFields()
     {
-        return $this->getFormFields();
+        return $this->getFormFieldSets();
     }
 
     public function fullFormFields()
@@ -575,7 +568,7 @@ class ResourceController extends BaseController
      */
     public function validateFormFields($request){
         $fieldsWithErrors = [];
-        foreach ($this->formFields as $field ){
+        foreach ($this->formFieldSets as $field ){
             if(!isset($field)) $field = new FormField();
             $validField = $field->validate($request[$field->getName()]);
              if(!$validField){
