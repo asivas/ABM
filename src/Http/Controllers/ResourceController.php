@@ -3,6 +3,7 @@ namespace Asivas\ABM\Http\Controllers;
 
 use Asivas\ABM\Exceptions\ABMException;
 use Asivas\ABM\Exceptions\FormFieldValidationException;
+use Asivas\ABM\Form\FieldGroup;
 use Asivas\ABM\Form\FieldSet;
 use Asivas\ABM\Form\FormField;
 use Asivas\ABM\Http\ColumnField;
@@ -568,12 +569,24 @@ class ResourceController extends BaseController
      */
     public function validateFormFields($request){
         $fieldsWithErrors = [];
-        foreach ($this->formFieldSets as $field ){
-            if(!isset($field)) $field = new FormField();
-            $validField = $field->validate($request[$field->getName()]);
-             if(!$validField){
-                 $fieldsWithErrors[] = $field;
-             }
+        /** @var FieldSet $fieldset */
+        foreach ($this->formFieldSets as $fieldset ){
+            /** @var FormField $field */
+            foreach ($fieldset->getFields() as $field) {
+                $validField = $field->validate($request[$field->getName()]);
+                if (!$validField) {
+                    $fieldsWithErrors[] = $field;
+                }
+            }
+            /** @var FieldGroup $group */
+            foreach ($fieldset->getFieldGroups() as $group) {
+                foreach ($group->getFields() as $field) {
+                    $validField = $field->validate($request[$field->getName()]);
+                    if (!$validField) {
+                        $fieldsWithErrors[] = $field;
+                    }
+                }
+            }
         }
         if(!empty($fieldsWithErrors))
         {

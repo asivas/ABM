@@ -2,6 +2,7 @@
     "name": "asivas/abm",
     "description": "The CRUD-Resouce controller implementation make simple base of an app based on resources, with NavItems and FormFields backend representation",
     "type": "library",
+    "version": "v1.1",
     "require": {
         "illuminate/support": "^8.66",
         "illuminate/contracts": "^8.66",
