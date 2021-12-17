@@ -95,10 +95,12 @@ class FieldGroup implements \ArrayAccess, \JsonSerializable, \Illuminate\Contrac
 
     public function addField(FormField $field) {
         $this->fields[] = $field;
+        return $this;
     }
 
     public function insertField(FormField $field, $position) {
         $this->fields[$position] = $field;
+        return $this;
     }
 
     public function removeField($fieldName) {
