@@ -81,7 +81,7 @@ class Controller extends BaseController
     }
 
 
-    protected function log($msg,$context,$level='info') {
+    protected static function log($msg,$context,$level='info') {
         try {
             Log::$level($msg,$context);
         } catch (\Exception $exception)
