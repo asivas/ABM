@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -77,5 +78,16 @@ class Controller extends BaseController
             'expires_in' => auth($guard)->factory()->getTTL() * 60,
             'user' => auth()->user(),
         ]);
+    }
+
+
+    protected function log($msg,$context,$level='info') {
+        try {
+            Log::$level($msg,$context);
+        } catch (\Exception $exception)
+        {
+
+        }
+
     }
 }

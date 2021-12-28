@@ -136,7 +136,7 @@ class ResourceController extends BaseController
             $this->authorize('viewAny', $this->model);
             $user = $request->user();
 
-            Log::debug('Visited', $this->getLogContext());
+            $this->log('Visited', $this->getLogContext(),'debug');
             $filterProperties = $request->all();
             $list = $this->getPaginatedFilteredList($filterProperties, $user);
 
@@ -158,7 +158,7 @@ class ResourceController extends BaseController
         try {
             $this->authorize('viewOptions', $this->model);
             $list = $this->model::filter($request->all())->get();
-            Log::debug('getOptions', $this->getLogContext());
+            $this->log('getOptions', $this->getLogContext(),'debug');
 
             $options = [];
             foreach ($list as $resource) {
@@ -199,7 +199,7 @@ class ResourceController extends BaseController
             $this->authorize('create', $this->model);
             $created = $this->storeResource($request);
             $created->actions = $this->getUserActions($created, $request->user());
-            Log::info('Resource Created', $this->getLogContext($created));
+            $this->log('Resource Created', $this->getLogContext($created));
             return $created;
         } catch (QueryException $e) {
             return response($e->errorInfo, 409);
@@ -267,7 +267,7 @@ class ResourceController extends BaseController
             $this->authorize('update', $toUpdate);
             $updated = $this->updateResource($request->all(), $id);
             $updated->actions = $this->getUserActions($updated, $request->user());
-            Log::info('Resource Updated', $this->getLogContext($updated));
+            $this->log('Resource Updated', $this->getLogContext($updated));
             return $updated;
         } catch (QueryException $e) {
             return response($e->errorInfo, 409);
@@ -307,7 +307,7 @@ class ResourceController extends BaseController
             if (!isset($c)) {
                 throw new \Exception('El elemento no se encuentra');
             }
-            Log::info('Resource Deleted', [
+            $this->log('Resource Deleted', [
                 'user' => Auth::user()->name,
                 'model' => $this->model,
                 'id' => $id
