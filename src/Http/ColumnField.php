@@ -14,6 +14,7 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     protected $label;
 
     protected $fieldType;
+    protected $valueType;
 
     public function __construct($name,$label)
     {
@@ -117,6 +118,26 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
         $this->fieldType = $fieldType;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getValueType()
+    {
+        return $this->valueType;
+    }
+
+    /**
+     * @param mixed $valueType
+     * @return ColumnField
+     */
+    public function setValueType($valueType)
+    {
+        $this->valueType = $valueType;
+        return $this;
+    }
+
+
 
 
 }
