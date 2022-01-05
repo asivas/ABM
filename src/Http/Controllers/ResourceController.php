@@ -343,7 +343,13 @@ class ResourceController extends BaseController
                 $fields[] = $col;
             }
         } else {
-            $fields = (new $this->model())->getDisplayableColumns();
+            $modelFields = (new $this->model())->getDisplayableColumns();
+            foreach ($modelFields as $col) {
+                $fields[] = [
+                    'label' => $col,
+                    'name' => $col
+                ];
+            }
         }
         return $fields;
     }
