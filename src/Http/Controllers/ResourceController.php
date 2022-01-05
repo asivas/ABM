@@ -340,10 +340,16 @@ class ResourceController extends BaseController
 
         if (!empty($this->listColumnFields)) {
             foreach ($this->listColumnFields as $col) {
-                $fields[$col->getLabel()] = $col->getName();
+                $fields[] = $col;
             }
         } else {
-            $fields = (new $this->model())->getDisplayableColumns();
+            $modelFields = (new $this->model())->getDisplayableColumns();
+            foreach ($modelFields as $col) {
+                $fields[] = [
+                    'label' => $col,
+                    'name' => $col
+                ];
+            }
         }
         return $fields;
     }

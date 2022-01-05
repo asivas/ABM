@@ -14,11 +14,13 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     protected $label;
 
     protected $fieldType;
+    protected $valueType;
 
-    public function __construct($name,$label)
+    public function __construct($name,$label,$valueType = null)
     {
         $this->label = $label;
         $this->name = $name;
+        $this->valueType = $valueType;
         $this->fieldType = ColumnFieldType::modelField; //every ColumnField is model By Default
     }
 
@@ -28,7 +30,11 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
 
     public function toArray()
     {
-        return [$this->label => $this->name];
+        return [
+            'label' => $this->label,
+            'name' => $this->name,
+            'type' => $this->valueType
+        ];
     }
 
     public function toJson($options = 0)
@@ -117,6 +123,26 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
         $this->fieldType = $fieldType;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getValueType()
+    {
+        return $this->valueType;
+    }
+
+    /**
+     * @param mixed $valueType
+     * @return ColumnField
+     */
+    public function setValueType($valueType)
+    {
+        $this->valueType = $valueType;
+        return $this;
+    }
+
+
 
 
 }
