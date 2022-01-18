@@ -197,7 +197,7 @@ class ResourceController extends BaseController
             $this->validateFormFields($request);
 
             $this->authorize('create', $this->model);
-            $created = $this->storeResource($request);
+            $created = $this->storeResource($request->all());
             $created->actions = $this->getUserActions($created, $request->user());
             $this->log('Resource Created', $this->getLogContext($created));
             return $created;
@@ -455,12 +455,12 @@ class ResourceController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param array $resourceValues
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function storeResource(Request $request)
+    public function storeResource(array $resourceValues)
     {
-        $created = $this->model::query()->create($request->all());
+        $created = $this->model::query()->create($resourceValues);
         if (!empty($this->getRelations())) {
             $created = $this->model::query()->with($this->getRelations())
                 ->where('id', $created->id)->first();
