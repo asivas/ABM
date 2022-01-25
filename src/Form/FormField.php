@@ -241,6 +241,7 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
         if(empty($this->rules)){
             return true;
         }
+        /** @var Rule $rule */
         foreach ($this->rules as $rule){
             $validRule = $rule->validate($value);
             if(!$validRule){

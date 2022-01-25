@@ -1,4 +1,5 @@
 <?php
+
 namespace Asivas\ABM\Http\Controllers;
 
 use Asivas\ABM\Exceptions\ABMException;
@@ -72,9 +73,11 @@ class ResourceController extends BaseController
      * @param string $fieldSetName
      * @return FieldSet
      */
-    protected function getFormFieldSet($fieldSetName) {
-        if(!isset($this->formFieldSets[$fieldSetName]))
+    protected function getFormFieldSet($fieldSetName)
+    {
+        if (!isset($this->formFieldSets[$fieldSetName])) {
             $this->addFieldSet(new FieldSet($fieldSetName));
+        }
         return $this->formFieldSets[$fieldSetName];
     }
 
@@ -95,7 +98,7 @@ class ResourceController extends BaseController
     public function getFormFields()
     {
         $plainFiledsArray = [];
-        /** @var FieldSet $fieldset  */
+        /** @var FieldSet $fieldset */
         foreach ($this->formFieldSets as $fieldset) {
             $plainFiledsArray[$fieldset->getName()] = $fieldset->toArray();
         }
@@ -107,16 +110,17 @@ class ResourceController extends BaseController
      * @param $user
      * @return mixed
      */
-    protected function getPaginatedFilteredList(array $filterProperties, $user =null, $injectUserActions=true)
+    protected function getPaginatedFilteredList(array $filterProperties, $user = null, $injectUserActions = true)
     {
-        if(!isset($user))
+        if (!isset($user)) {
             $user = auth()->user();
+        }
         $with = $this->getRelationsFromRelatedFields();
         $list = $this->model::with($with)
             ->filter($filterProperties)
             ->PaginateFilter(null, $this->getFieldListForFilter($this->modelFields()));
 
-        if($injectUserActions) {
+        if ($injectUserActions) {
             $items = $list->items();
             foreach ($items as $res) {
                 $res->actions = $this->getUserActions($res, $user);
@@ -136,7 +140,7 @@ class ResourceController extends BaseController
             $this->authorize('viewAny', $this->model);
             $user = $request->user();
 
-            $this->log('Visited', $this->getLogContext(),'debug');
+            $this->log('Visited', $this->getLogContext(), 'debug');
             $filterProperties = $request->all();
             $list = $this->getPaginatedFilteredList($filterProperties, $user);
 
@@ -158,7 +162,7 @@ class ResourceController extends BaseController
         try {
             $this->authorize('viewOptions', $this->model);
             $list = $this->model::filter($request->all())->get();
-            $this->log('getOptions', $this->getLogContext(),'debug');
+            $this->log('getOptions', $this->getLogContext(), 'debug');
 
             $options = [];
             foreach ($list as $resource) {
@@ -207,6 +211,8 @@ class ResourceController extends BaseController
             return response($e->getMessage(), 403);
         } catch (ABMException $e) {
             return $this->resolveException($e);
+        } catch (FormFieldValidationException $e) {
+            return response($e->getMessage(), $e->getCode());
         }
     }
 
@@ -215,7 +221,8 @@ class ResourceController extends BaseController
         return response($e->getMessage(), $e->getStatusCode());
     }
 
-    protected function fetchResourceForShow($id) {
+    protected function fetchResourceForShow($id)
+    {
         return $this->model::with($this->getRelations())->findOrFail($id);
     }
 
@@ -259,7 +266,6 @@ class ResourceController extends BaseController
      */
     public function update(Request $request, int $id)
     {
-
         $toUpdate = $this->model::query()->where('id', $id)->first();
 
         try {
@@ -357,22 +363,28 @@ class ResourceController extends BaseController
     /**
      * @param $type
      */
-    protected function getColumnFieldsByType($type) {
+    protected function getColumnFieldsByType($type)
+    {
         $typeFields = [];
-        foreach($this->listColumnFields as $columnField) {
-            if(!isset($columnField)) $columnField = new ColumnField();
-            if($columnField->getFieldType() == $type)
+        foreach ($this->listColumnFields as $columnField) {
+            if (!isset($columnField)) {
+                $columnField = new ColumnField();
+            }
+            if ($columnField->getFieldType() == $type) {
                 $typeFields[] = $columnField;
+            }
         }
 
         return $typeFields;
     }
 
-    protected function getRelatedModelClass($parentModel,$relation) {
-        if(!Str::contains($relation,'.'))
+    protected function getRelatedModelClass($parentModel, $relation)
+    {
+        if (!Str::contains($relation, '.')) {
             return get_class((new $parentModel())->$relation()->getRelated());
+        }
 
-        $subParentRelation = Str::before($relation,'.');
+        $subParentRelation = Str::before($relation, '.');
         return get_class((new $parentModel())->$subParentRelation()->getRelated());
     }
 
@@ -385,21 +397,19 @@ class ResourceController extends BaseController
         $modelFields = [];
         $modelTypeFields = $this->getColumnFieldsByType(ColumnFieldType::modelField);
 
-        if(empty($modelTypeFields))
+        if (empty($modelTypeFields)) {
             return ['*'];
+        }
 
-        foreach($modelTypeFields as $modelField)
-        {
+        foreach ($modelTypeFields as $modelField) {
             $modelFields[$modelField->getLabel()] = $modelField->getName();
         }
 
         $relatedModels = $this->getRelationsFromRelatedFields();
 
-        foreach($relatedModels as $relation)
-        {
-            $relatedModelClassName = $this->getRelatedModelClass($this->model,$relation);
-            if(class_exists($relatedModelClassName))
-            {
+        foreach ($relatedModels as $relation) {
+            $relatedModelClassName = $this->getRelatedModelClass($this->model, $relation);
+            if (class_exists($relatedModelClassName)) {
                 $fk = (new $relatedModelClassName())->getForeignKey();
                 $modelFields[$fk] = $fk;
             }
@@ -417,8 +427,7 @@ class ResourceController extends BaseController
     {
         $relatedFields = [];
         $relatedColumnFields = $this->getColumnFieldsByType(ColumnFieldType::relatedField);
-        foreach ($relatedColumnFields as $relatedColumnField)
-        {
+        foreach ($relatedColumnFields as $relatedColumnField) {
             $relatedFields[$relatedColumnField->getLabel()] = $relatedColumnField->getName();
         }
         return $relatedFields;
@@ -432,8 +441,7 @@ class ResourceController extends BaseController
     {
         $appendedFields = [];
         $appendedColumnFields = $this->getColumnFieldsByType(ColumnFieldType::appendedField);
-        foreach ($appendedColumnFields as $appendedColumnField)
-        {
+        foreach ($appendedColumnFields as $appendedColumnField) {
             $appendedFields[$appendedColumnField->getLabel()] = $appendedColumnField->getName();
         }
         return $appendedFields;
@@ -567,26 +575,25 @@ class ResourceController extends BaseController
      */
     protected function getFieldListForFilter($modelFields): array
     {
-        if(empty($modelFields))
-            $modelFields =  ['*'];
-        else
-        {
-            $modelFields[]='id';
+        if (empty($modelFields)) {
+            $modelFields = ['*'];
+        } else {
+            $modelFields[] = 'id';
         }
 
-        return  $modelFields;
+        return $modelFields;
     }
-
 
 
     /**
      * @param $request
      * @throws FormFieldValidationException
      */
-    public function validateFormFields($request){
+    public function validateFormFields($request)
+    {
         $fieldsWithErrors = [];
         /** @var FieldSet $fieldset */
-        foreach ($this->formFieldSets as $fieldset ){
+        foreach ($this->formFieldSets as $fieldset) {
             /** @var FormField $field */
             foreach ($fieldset->getFields() as $field) {
                 $validField = $field->validate($request[$field->getName()]);
@@ -604,16 +611,14 @@ class ResourceController extends BaseController
                 }
             }
         }
-        if(!empty($fieldsWithErrors))
-        {
-            $errorMsg =[];
+        if (!empty($fieldsWithErrors)) {
+            $errorMsg = [];
             foreach ($fieldsWithErrors as $fe) {
                 $errorMsg[$fe->getName()] = $fe->getErrorMessage();
             }
-            throw new FormFieldValidationException(json_encode($errorMsg),422);
+            throw new FormFieldValidationException(json_encode($errorMsg), 422);
         }
     }
-
 
 
 }
