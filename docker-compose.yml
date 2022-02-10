@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  php:
+    build: ./dockerfiles
+    ports:
+      - 9000
+    volumes:
+      - "./:/var/www/app"
+      - "./dockerfiles/config/php/php-fpm.conf:/etc/php-fpm.conf"
+      - "./dockerfiles/config/php/www.conf:/etc/php-fpm.d/www.conf"
+      - "./dockerfiles/config/php/php.ini:/usr/local/etc/php/php.ini"
+      - "./dockerfiles/config/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini"
