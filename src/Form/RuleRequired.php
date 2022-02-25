@@ -11,6 +11,6 @@ class RuleRequired extends Rule
      */
     public function validate($value): bool
     {
-        return !empty($value);
+        return isset($value);
     }
 }
