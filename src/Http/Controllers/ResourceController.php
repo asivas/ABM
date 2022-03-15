@@ -146,7 +146,7 @@ class ResourceController extends BaseController
 
             return $list;
         } catch (QueryException $e) {
-            return response($e->errorInfo, 409);
+            return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
         }
@@ -173,7 +173,7 @@ class ResourceController extends BaseController
             }
             return $options;
         } catch (QueryException $e) {
-            return response($e->errorInfo, 409);
+            return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
         }
@@ -206,7 +206,7 @@ class ResourceController extends BaseController
             $this->log('Resource Created', $this->getLogContext($created));
             return $created;
         } catch (QueryException $e) {
-            return response($e->errorInfo, 409);
+            return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
         } catch (ABMException $e) {
@@ -240,7 +240,7 @@ class ResourceController extends BaseController
             $item->actions = $this->getUserActions($item, $request->user());
             return $item;
         } catch (QueryException $e) {
-            return response($e->errorInfo, 409);
+            return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
         }
@@ -276,7 +276,7 @@ class ResourceController extends BaseController
             $this->log('Resource Updated', $this->getLogContext($updated));
             return $updated;
         } catch (QueryException $e) {
-            return response($e->errorInfo, 409);
+            return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
         } catch (FormFieldValidationException $e) {
@@ -309,10 +309,10 @@ class ResourceController extends BaseController
     {
         $c = $this->model::find($id);
         try {
-            $this->authorize('delete', $c);
             if (!isset($c)) {
                 throw new \Exception('El elemento no se encuentra');
             }
+            $this->authorize('delete', $c);
             $this->log('Resource Deleted', [
                 'user' => Auth::user()->name,
                 'model' => $this->model,
@@ -320,11 +320,11 @@ class ResourceController extends BaseController
             ]);
             return $c->delete();
         } catch (QueryException $e) {
-            return response('por asignarse en al menos un usuario', 409);
+            return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
             return response($e->getMessage(), 403);
         } catch (\Exception $error) {
-            return response('porque el país no existe en la base de datos', 404);
+            return response($error->getMessage(), 404);
         }
     }
 
