@@ -6,6 +6,7 @@ use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
 class FieldGroup implements \ArrayAccess, \JsonSerializable, \Illuminate\Contracts\Support\Jsonable, \Illuminate\Contracts\Support\Arrayable
@@ -21,7 +22,7 @@ class FieldGroup implements \ArrayAccess, \JsonSerializable, \Illuminate\Contrac
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->fields[$offset]);
     }
@@ -50,7 +51,7 @@ class FieldGroup implements \ArrayAccess, \JsonSerializable, \Illuminate\Contrac
         unset($this->fields[$offset]);
     }
 
-    public function toArray()
+    #[ArrayShape(['name' => "", 'fields' => "array"])] public function toArray(): array
     {
         $fields = [];
         /**
@@ -78,7 +79,7 @@ class FieldGroup implements \ArrayAccess, \JsonSerializable, \Illuminate\Contrac
     /**
      * @return mixed
      */
-    public function getFields()
+    public function getFields(): mixed
     {
         return $this->fields;
     }

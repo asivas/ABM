@@ -41,6 +41,7 @@ class ResourceController extends BaseController
 
     public function __construct()
     {
+        parent::__construct();
         $this->initFormFields();
         $this->initActions();
         $this->initListColumns();
@@ -155,7 +156,7 @@ class ResourceController extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function options(Request $request)
     {
@@ -208,6 +209,7 @@ class ResourceController extends BaseController
         } catch (QueryException $e) {
             return response($e->getMessage(), 409);
         } catch (AuthorizationException $e) {
+
             return response($e->getMessage(), 403);
         } catch (ABMException $e) {
             return $this->resolveException($e);
@@ -351,10 +353,7 @@ class ResourceController extends BaseController
         } else {
             $modelFields = (new $this->model())->getDisplayableColumns();
             foreach ($modelFields as $col) {
-                $fields[] = [
-                    'label' => $col,
-                    'name' => $col
-                ];
+                $fields[] = ColumnField::create($col,$col);
             }
         }
         return $fields;
