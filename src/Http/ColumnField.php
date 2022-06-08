@@ -33,7 +33,9 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
         return [
             'label' => $this->label,
             'name' => $this->name,
-            'type' => $this->valueType
+            'type' => $this->valueType,
+            'valueType' => $this->valueType,
+            'fieldType' => $this->fieldType
         ];
     }
 
