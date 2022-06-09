@@ -250,10 +250,12 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
 
     /**
      * @param mixed $value
+     * @return $this
      */
-    public function setValue(mixed $value): void
+    public function setValue(mixed $value): FormField
     {
         $this->value = $value;
+        return $this;
     }
 
 
