@@ -9,7 +9,6 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Str;
 use JsonSerializable;
 use phpDocumentor\Reflection\Types\ClassString;
-use function PHPUnit\Framework\isEmpty;
 
 
 class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
@@ -29,6 +28,11 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     protected $filter;
     protected $rules;
     protected $errorMesg;
+
+    /**
+     * @var mixed the value to be forced from backend (usefull in hidden and to set defaults)
+     */
+    protected $value;
 
 
     public function __construct($name,$label,$type,$required=null,$gridClasses=null,$resource = null,$modelItem = null,$options=null,$mode=null)
@@ -235,6 +239,24 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     {
         return $this->rules;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue(mixed $value): void
+    {
+        $this->value = $value;
+    }
+
+
 
     public function validate($value)
     {
