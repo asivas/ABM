@@ -293,8 +293,8 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
             $arr['gridClasses'] = $this->gridClasses;
         if(isset($this->mode))
             $arr['mode'] = $this->mode;
-        if(isset($this->type))
-            $arr['type'] = $this->type;
+        if(isset($this->value))
+            $arr['value'] = $this->value;
         return $arr;
     }
 

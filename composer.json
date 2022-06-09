@@ -2,7 +2,7 @@
     "name": "asivas/abm",
     "description": "The CRUD-Resouce controller implementation make simple base of an app based on resources, with NavItems and FormFields backend representation",
     "type": "library",
-    "version": "v2.0.5.2",
+    "version": "v2.0.5.3",
     "require": {
         "tucker-eric/eloquentfilter": "^3.0"
     },
