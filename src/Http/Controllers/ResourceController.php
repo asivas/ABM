@@ -371,6 +371,13 @@ class ResourceController extends BaseController
     }
 
 
+    protected function populateFieldsFromModel() {
+        $modelFields = (new $this->model())->getDisplayableColumns();
+        foreach ($modelFields as $col) {
+            $this->addColumnField(ColumnField::create($col,$col));
+        }
+    }
+
 
     /**
      * Returns the ordered (according to the listColumns alias array) list of fields for lists and forms
@@ -380,17 +387,11 @@ class ResourceController extends BaseController
     {
         //$unsortedFields = array_merge($this->modelFields(), $this->relatedFields(), $this->appendedFields());
 
-        if (!empty($this->listColumnFields)) {
-            foreach ($this->listColumnFields as $col) {
-                $fields[] = $col;
-            }
-        } else {
-            $modelFields = (new $this->model())->getDisplayableColumns();
-            foreach ($modelFields as $col) {
-                $fields[] = ColumnField::create($col,$col);
-            }
+        if ($this->listColumnFields->isEmpty()) {
+            $this->populateFieldsFromModel();
         }
-        return $fields;
+
+        return $this->getListColumnFields();
     }
 
     /**
