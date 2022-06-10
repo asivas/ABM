@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -24,6 +25,9 @@ use Illuminate\Support\Str;
 class ResourceController extends BaseController
 {
     protected $formFieldSets;
+    /**
+     * @var Collection
+     */
     protected $listColumnFields;
 
     /**
@@ -331,12 +335,42 @@ class ResourceController extends BaseController
     }
 
     /**
+     * @return mixed
+     */
+    public function getListColumnFields()
+    {
+        if(!isset($this->listColumnFields))
+            $this->initListColumns();
+        return $this->listColumnFields;
+    }
+
+    /**
      * Every Resourse controller should define the columns to show on the ABM list
      */
     public function initListColumns()
     {
-        $this->listColumnFields = [];
+        $this->listColumnFields = new Collection();
     }
+
+    /**
+     * @param ColumnField $field
+     * @return $this
+     */
+    public function addColumnField(ColumnField $field) {
+        $this->listColumnFields->put($field->getName(), $field);
+        return $this;
+    }
+
+    /**
+     * @param $fieldName
+     * @return $this
+     */
+    public function removeColumnField($fieldName) {
+        $this->listColumnFields->forget($fieldName);
+        return $this;
+    }
+
+
 
     /**
      * Returns the ordered (according to the listColumns alias array) list of fields for lists and forms
