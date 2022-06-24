@@ -120,9 +120,8 @@ class ResourceController extends BaseController
         if (!isset($user)) {
             $user = auth()->user();
         }
-        $with = $this->getRelationsFromRelatedFields();
-        $list = $this->model::with($with)
-            ->filter($filterProperties)
+        $q = $this->getListBaseQuery();
+        $list = $q->filter($filterProperties)
             ->PaginateFilter(null, $this->getFieldListForFilter($this->modelFields()));
 
         if ($injectUserActions) {
@@ -652,6 +651,15 @@ class ResourceController extends BaseController
             }
             throw new FormFieldValidationException(json_encode($errorMsg), 422);
         }
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getListBaseQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $with = $this->getRelationsFromRelatedFields();
+        return $$this->model::with($with);
     }
 
 
