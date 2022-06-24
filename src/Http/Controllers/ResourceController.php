@@ -659,7 +659,7 @@ class ResourceController extends BaseController
     protected function getListBaseQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $with = $this->getRelationsFromRelatedFields();
-        return $$this->model::with($with);
+        return $this->model::with($with);
     }
 
 
