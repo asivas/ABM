@@ -356,7 +356,7 @@ class ResourceController extends BaseController
      * @return $this
      */
     public function addColumnField(ColumnField $field) {
-        $this->listColumnFields->put($field->getName(), $field);
+        $this->getListColumnFields()->put($field->getName(), $field);
         return $this;
     }
 
@@ -365,7 +365,7 @@ class ResourceController extends BaseController
      * @return $this
      */
     public function removeColumnField($fieldName) {
-        $this->listColumnFields->forget($fieldName);
+        $this->getListColumnFields()->forget($fieldName);
         return $this;
     }
 
@@ -386,7 +386,7 @@ class ResourceController extends BaseController
     {
         //$unsortedFields = array_merge($this->modelFields(), $this->relatedFields(), $this->appendedFields());
 
-        if ($this->listColumnFields->isEmpty()) {
+        if ($this->getListColumnFields()->isEmpty()) {
             $this->populateFieldsFromModel();
         }
 
@@ -399,7 +399,7 @@ class ResourceController extends BaseController
     protected function getColumnFieldsByType($type)
     {
         $typeFields = [];
-        foreach ($this->listColumnFields as $columnField) {
+        foreach ($this->getListColumnFields() as $columnField) {
             if (!isset($columnField)) {
                 $columnField = new ColumnField();
             }
