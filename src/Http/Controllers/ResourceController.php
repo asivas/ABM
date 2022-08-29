@@ -296,8 +296,7 @@ class ResourceController extends BaseController
             $updated = $this->model::query()->where('id', $id)->first();
 
             if (!empty($this->getRelations())) {
-                $updated = $this->model::query()->with($this->getRelations())
-                    ->where('id', $id)->first();
+                $updated->fresh($this->getRelations());
             }
             return $updated;
         }
@@ -503,8 +502,7 @@ class ResourceController extends BaseController
     {
         $created = $this->model::query()->create($resourceValues);
         if (!empty($this->getRelations())) {
-            $created = $this->model::query()->with($this->getRelations())
-                ->where('id', $created->id)->first();
+            $created->fresh($this->getRelations());
         }
         return $created;
     }
