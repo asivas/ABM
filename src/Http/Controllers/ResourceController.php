@@ -410,6 +410,7 @@ class ResourceController extends BaseController
         return $typeFields;
     }
 
+
     protected function getRelatedModelClass($parentModel, $relation)
     {
         if (!Str::contains($relation, '.')) {
@@ -440,14 +441,17 @@ class ResourceController extends BaseController
         $relatedModels = $this->getRelationsFromRelatedFields();
         $modelInstance = new $this->model();
         foreach ($relatedModels as $relation) {
-            $subRelModel = $modelInstance;
-            $subrels = explode('.',$relation);
-            $lastRelation = array_pop($subrels);
-            foreach ($subrels as $subRel){
-                $subRelModel = $subRelModel->$subRel()->getRelated();
-            }
-            $fk = (new $subRelModel())->$lastRelation()->getForeignKeyName();
+            if(str_contains($relation, '.')) {
+                $relatedModelClassName = $this->getRelatedModelClass($this->model, $relation);
+                if (class_exists($relatedModelClassName)) {
+                    $fk = (new $relatedModelClassName())->getForeignKey();
 
+                }
+            }
+            else
+            {
+                $fk = (new $modelInstance())->$relation()->getForeignKeyName();
+            }
             $modelFields[$fk] = $fk;
         }
 
