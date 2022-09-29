@@ -438,15 +438,18 @@ class ResourceController extends BaseController
         }
 
         $relatedModels = $this->getRelationsFromRelatedFields();
-
+        $modelInstance = new $this->model();
         foreach ($relatedModels as $relation) {
-            $relatedModelClassName = $this->getRelatedModelClass($this->model, $relation);
-            if (class_exists($relatedModelClassName)) {
-                $fk = (new $relatedModelClassName())->getForeignKey();
-                $modelFields[$fk] = $fk;
+            $subRelModel = $modelInstance;
+            $subrels = explode('.',$relation);
+            $lastRelation = array_pop($subrels);
+            foreach ($subrels as $subRel){
+                $subRelModel = $subRelModel->$subRel;
             }
-        }
+            $fk = (new $subRelModel())->$lastRelation()->getForeignKeyName();
 
+            $modelFields[$fk] = $fk;
+        }
 
         return $modelFields;
     }
