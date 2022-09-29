@@ -444,7 +444,7 @@ class ResourceController extends BaseController
             $subrels = explode('.',$relation);
             $lastRelation = array_pop($subrels);
             foreach ($subrels as $subRel){
-                $subRelModel = $subRelModel->$subRel;
+                $subRelModel = $subRelModel->$subRel()->getRelated();
             }
             $fk = (new $subRelModel())->$lastRelation()->getForeignKeyName();
 
