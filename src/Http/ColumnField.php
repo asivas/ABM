@@ -16,6 +16,8 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     protected $fieldType;
     protected $valueType;
 
+    protected $minWith;
+
     public function __construct($name,$label,$valueType = null)
     {
         $this->label = $label;
@@ -35,7 +37,10 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
             'name' => $this->name,
             'type' => $this->valueType,
             'valueType' => $this->valueType,
-            'fieldType' => $this->fieldType
+            'fieldType' => $this->fieldType,
+            'value-type' => $this->valueType,
+            'field-type' => $this->fieldType,
+            'min-width' => $this->minWith,
         ];
     }
 
@@ -141,6 +146,24 @@ class ColumnField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     public function setValueType($valueType)
     {
         $this->valueType = $valueType;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinWith()
+    {
+        return $this->minWith;
+    }
+
+    /**
+     * @param mixed $minWith
+     * @return ColumnField
+     */
+    public function setMinWith($minWith)
+    {
+        $this->minWith = $minWith;
         return $this;
     }
 
