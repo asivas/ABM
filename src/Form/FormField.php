@@ -17,7 +17,7 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     protected $label;
     protected $type;
     protected $modelItem;
-    protected $required;
+
     /**
      * @var string|ClassString|null Resource class name
      */
@@ -35,7 +35,7 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
     protected $value;
 
 
-    public function __construct($name,$label,$type,$required=null,$gridClasses=null,$resource = null,$modelItem = null,$options=null,$mode=null)
+    public function __construct($name,$label,$type,$gridClasses=null,$resource = null,$modelItem = null,$options=null,$mode=null)
     {
         $this->name = $name;
         $this->label =$label;
@@ -45,7 +45,6 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
         $this->options = $options;
         $this->gridClasses = $gridClasses;
         $this->mode = $mode;
-        $this->required = $required;
         $this->rules = [];
     }
 
@@ -206,17 +205,30 @@ class FormField implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
      */
     public function getRequired()
     {
-        return $this->required;
+        return $this->hasRequiredRule();
     }
 
     /**
      * @param mixed $required
+     * @deprecated the required property will be checking if the field hasRequiredRule
      * @return FormField
      */
     public function setRequired($required)
     {
-        $this->required = $required;
+        //$this->required = $required;
+        if($required && !$this->hasRequiredRule())
+            $this->addRule(RuleRequired::create("{$this->name} is required"));
         return $this;
+    }
+
+
+    public function hasRequiredRule() {
+        foreach ($this->rules  as $rule)
+        {
+            if(is_a($rule,RuleRequired::class))
+                return true;
+        }
+        return false;
     }
 
     public function setErrorMessage($message)
