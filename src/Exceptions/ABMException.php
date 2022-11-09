@@ -9,7 +9,7 @@ class ABMException extends \Exception
         if ($this->getPrevious()) {
             return $this->getPrevious()->getCode();
         } else {
-            return 500;
+            return $this->code ?? 500;
         }
     }
 }
